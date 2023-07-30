@@ -3,19 +3,18 @@
     "useTabs": false,
     "semi": false,
     "singleQuote": false,
-    "printWidth": 100,
+    "printWidth": 75,
     "overrides": [
-      {
-        "files": "*.sol",
-        "options": {
-          "printWidth": 80,
-          "tabWidth": 4,
-          "useTabs": false,
-          "singleQuote": false,
-          "bracketSpacing": false,
-          "explicitTypes": "always"
+        {
+            "files": "*.sol",
+            "options": {
+                "printWidth": 80,
+                "tabWidth": 4,
+                "useTabs": false,
+                "singleQuote": false,
+                "bracketSpacing": false,
+                "explicitTypes": "always"
+            }
         }
-      }
     ]
-  }
-  
+}
