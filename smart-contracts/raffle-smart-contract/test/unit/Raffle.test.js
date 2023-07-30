@@ -1,5 +1,5 @@
 const { assert, expect } = require("chai")
-const { ethers, getNamedAccounts, deployments } = require("hardhat")
+const { ethers, getNamedAccounts, deployments, network } = require("hardhat")
 
 const ENTRANCE_FEE = ethers.parseEther("0.1")
 

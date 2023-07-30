@@ -5,7 +5,13 @@ import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 
 contract Raffle is VRFConsumerBaseV2 {
-    //STATE VARIABLES
+    //types
+    enum RaffleState {
+        OPEN,
+        CALCULATING
+    }
+
+    //state variables
     uint256 private immutable entranceFee;
     address payable[] public players;
     VRFCoordinatorV2Interface private immutable COORDINATOR;
@@ -14,8 +20,9 @@ contract Raffle is VRFConsumerBaseV2 {
     uint16 private constant REQUEST_CONFIRMATIONS = 3;
     uint32 private constant NUM_WORDS = 1;
     uint32 private immutable callBackGasLimit;
+    RaffleState private raffleState;
 
-    //ERRORS
+    //errors
     error Raffle__NotEnoughEth();
 
     //events
@@ -54,7 +61,7 @@ contract Raffle is VRFConsumerBaseV2 {
             callBackGasLimit,
             NUM_WORDS
         );
-
+        raffleState = RaffleState.CALCULATING;
         emit RandomWordsRequested();
     }
 
@@ -68,5 +75,9 @@ contract Raffle is VRFConsumerBaseV2 {
     //getters
     function getPlayer(uint256 index) public view returns (address) {
         return players[index];
+    }
+
+    function getRaffleState() public view returns (RaffleState) {
+        return raffleState;
     }
 }
