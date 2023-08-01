@@ -30,6 +30,7 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
     error Raffle__NotEnoughEth();
     error Raffle__TransferFailed();
     error Raffle__UpKeepNotNeeded();
+    error Raffle__LotteryNotOpen();
 
     //events
     event RaffleEntered(address indexed player);
@@ -56,6 +57,11 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
         if (msg.value != entranceFee) {
             revert Raffle__NotEnoughEth();
         }
+
+        if (raffleState != RaffleState.OPEN) {
+            revert Raffle__LotteryNotOpen();
+        }
+
         players.push(payable(msg.sender));
         emit RaffleEntered(msg.sender);
     }
@@ -135,6 +141,10 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
 
     function getInterval() public view returns (uint256) {
         return interval;
+    }
+
+    function getNumberOfPlayers() public view returns (uint256) {
+        return players.length;
     }
 
     // * receive function

@@ -74,23 +74,17 @@ describe("Raffle unit testing", () => {
         })
 
         describe("checking fulfillRandomWords", () => {
+            let requestId
             beforeEach(async () => {
-                const tx = await Raffle.enterRaffle({
+                let tx = await Raffle.enterRaffle({
                     value: ENTRANCE_FEE,
                 })
                 await tx.wait(1)
-            })
-
-            it("checks if the winner was picked", async () => {
-                let requestId
                 await new Promise(async (resolve, reject) => {
                     VRFCoordinatorMock.once(
                         "RandomWordsRequested",
                         async () => {
                             try {
-                                console.log(
-                                    "EVENT FIRED: random words event was fired"
-                                )
                                 const events =
                                     await VRFCoordinatorMock.queryFilter(
                                         "RandomWordsRequested"
@@ -102,12 +96,15 @@ describe("Raffle unit testing", () => {
                             }
                         }
                     )
-                    const tx = await Raffle.requestRandomWords()
+                    await forwardTime()
+                    tx = await Raffle.performUpkeep("0x")
                     await tx.wait(1)
                 })
+            })
 
+            it("checks if the winner was picked", async () => {
                 const RaffleAddress = await Raffle.getAddress()
-                let tx = await VRFCoordinatorMock.fulfillRandomWords(
+                tx = await VRFCoordinatorMock.fulfillRandomWords(
                     requestId,
                     RaffleAddress
                 )
@@ -115,6 +112,19 @@ describe("Raffle unit testing", () => {
 
                 const recentWinner = await Raffle.getRecentWinner()
                 expect(recentWinner).to.be.equal(deployer)
+            })
+
+            it("checks if the winner event was emitted", async () => {
+                const RaffleAddress = await Raffle.getAddress()
+                tx = await VRFCoordinatorMock.fulfillRandomWords(
+                    requestId,
+                    RaffleAddress
+                )
+                await tx.wait(1)
+
+                const events = await Raffle.queryFilter("WinnerPicked")
+                const winner = events[0].args[0]
+                expect(winner).to.equal(deployer)
             })
         })
 
