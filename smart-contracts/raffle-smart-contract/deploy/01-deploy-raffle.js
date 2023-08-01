@@ -13,12 +13,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     const gasLane = networkConfig[chainID]["keyHash"]
     const callBackGasLimit = networkConfig[chainID]["callBackGasLimit"]
-    let subId, VRFCoordinatorMockAddress
-    const VRFCoordinatorMock = await ethers.getContract(
-        "VRFCoordinatorV2Mock",
-        deployer
-    )
+    let subId, VRFCoordinatorMock, VRFCoordinatorMockAddress
+
     if (developmentChains.includes(network.name)) {
+        VRFCoordinatorMock = await ethers.getContract(
+            "VRFCoordinatorV2Mock",
+            deployer
+        )
         let tx = await VRFCoordinatorMock.createSubscription()
         await tx.wait(1)
         const events = await VRFCoordinatorMock.queryFilter(
@@ -32,6 +33,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         console.log("\ncreated and funded subscription.")
         VRFCoordinatorMockAddress = await VRFCoordinatorMock.getAddress()
     }
+
+    const interval = networkConfig[chainID]["automationUpdateInterval"]
     const enteranceFee = ethers.parseEther("0.1")
     const args = [
         enteranceFee,
@@ -39,6 +42,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         subId,
         gasLane,
         callBackGasLimit,
+        interval
     ]
     console.log("\ndeploying Raffle contract...")
     const Raffle = await deploy("Raffle", {
@@ -47,7 +51,12 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })
-    console.log("Raffle contract deployed.\n-----------------------------")
+    console.log("Raffle contract deployed.")
+    const raffleAddress = await Raffle.address
+    tx = await VRFCoordinatorMock.addConsumer(subId, raffleAddress)
+    console.log(
+        "Raffle contract added as consumer.\n----------------------"
+    )
 }
 
 module.exports.tags = ["all", "raffle"]
