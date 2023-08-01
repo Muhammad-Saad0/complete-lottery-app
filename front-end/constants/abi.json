@@ -1,0 +1,153 @@
+[
+  {
+    "type": "constructor",
+    "stateMutability": "undefined",
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "_entranceFee" },
+      { "type": "address", "name": "_VRFCoordinatorAddress" },
+      { "type": "uint64", "name": "_subscriptionId" },
+      { "type": "bytes32", "name": "_gasLane" },
+      { "type": "uint32", "name": "_callBackGasLimit" },
+      { "type": "uint256", "name": "_interval" }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "OnlyCoordinatorCanFulfill",
+    "inputs": [
+      { "type": "address", "name": "have" },
+      { "type": "address", "name": "want" }
+    ]
+  },
+  { "type": "error", "name": "Raffle__LotteryNotOpen", "inputs": [] },
+  { "type": "error", "name": "Raffle__NotEnoughEth", "inputs": [] },
+  { "type": "error", "name": "Raffle__TransferFailed", "inputs": [] },
+  { "type": "error", "name": "Raffle__UpKeepNotNeeded", "inputs": [] },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "RaffleEntered",
+    "inputs": [{ "type": "address", "name": "player", "indexed": true }]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "WinnerPicked",
+    "inputs": [{ "type": "address", "name": "winner", "indexed": false }]
+  },
+  { "type": "fallback", "stateMutability": "payable" },
+  {
+    "type": "function",
+    "name": "checkUpkeep",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "bytes" }],
+    "outputs": [
+      { "type": "bool", "name": "upkeepNeeded" },
+      { "type": "bytes" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "enterRaffle",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "getEntranceFee",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getInterval",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getLastTimeStamp",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getNumberOfPlayers",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256" }]
+  },
+  {
+    "type": "function",
+    "name": "getPlayer",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "index" }],
+    "outputs": [{ "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "getRaffleState",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint8" }]
+  },
+  {
+    "type": "function",
+    "name": "getRecentWinner",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "performUpkeep",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "bytes" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "players",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256" }],
+    "outputs": [{ "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "rawFulfillRandomWords",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "requestId" },
+      { "type": "uint256[]", "name": "randomWords" }
+    ],
+    "outputs": []
+  },
+  { "type": "receive", "stateMutability": "payable" }
+]
